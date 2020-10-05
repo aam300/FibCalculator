@@ -1,0 +1,65 @@
+version: '3'
+services:
+    postgres:
+        image: 'postgres:latest'
+        environment: 
+            - postgres_password=postgres_password
+    redis:
+        image: 'redis:latest'
+    nginx:
+        depends_on: 
+            - api
+            - client
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '3050:80'
+    api:
+        depends_on: 
+            - postgres
+        build:
+            dockerfile: Dockerfile.dev
+            # specify where to look for the docker file use cotext tag
+            context: ./server
+        volumes: 
+
+            - /app/node_modules
+            # rerotuing app to server folder
+            - ./server:/app
+        environment: 
+            - REDIS_HOST= redis
+            - REDIS_PORT= 6379    
+            - PGUSER=postgres
+            - PGHOST=postgres
+            - PGDATABASE=postgres
+            - PGPASSWORD=postgres_password
+            - PGPORT=5432
+    client:
+
+        stdin_open: true
+        build:
+             # specify where to look for the docker file use cotext tag
+            dockerfile: Dockerfile.dev
+            context: ./client
+        
+        volumes: 
+            - /app/node_modules
+
+                 # rerotuing app to server folder
+            - ./client:/app
+    worker:
+        environment: 
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        build:
+             # specify where to look for the docker file use cotext tag
+            dockerfile: Dockerfile.dev
+            context: ./worker
+        volumes: 
+
+            - /app/node_modules
+                 # rerotuing app to server folder
+            - ./worker:/app
+        
