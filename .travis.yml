@@ -2,10 +2,10 @@ sudo: required
 services:
     - docker
 before_install:
-    - docker build -t aam300/Fib-Cal -f ./client/Dockerfile.dev ./client
+    - docker build -t aam300/fib-cal -f ./client/Dockerfile.dev ./client
 
 script:
-    - docker run -e CI=true aam300/Fib-Cal npm run test
+    - docker run -e CI=true aam300/fib-cal npm run test
 after_success:
     - docker build -t aam300/multi-client ./client 
     - docker build -t aam300/multi-nginx ./nginx
