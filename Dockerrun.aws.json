@@ -1,0 +1,36 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions" : [
+    {
+        "name": "client",
+        "image": "aam300/fib-client",
+        "hostname": "client",
+        "essential": false
+    },
+    {
+        "name": "server",
+        "image": "aam300/fib-client",
+        "hostname": "api",
+        "essential": false
+    },
+    {
+        "name": "worker",
+        "image": "aam300/fib-client",
+        "hostname": "worker",
+        "essential": false
+    },
+    {
+        "name": "nginx",
+        "image": "aam300/fib-client",
+        "hostname": "nginx",
+        "essential": true,
+        "portMappings": [
+            {
+                "hostPort":80,
+                "containerPort":80
+            }
+        ],
+        "links":["client", "server"]
+    }
+    ]
+}
